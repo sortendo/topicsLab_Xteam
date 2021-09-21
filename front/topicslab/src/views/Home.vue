@@ -2,7 +2,7 @@
   <div class="home">
     <div class="top-logo">
       <img alt="logo" src="../assets/logo.png">
-      <span class="message">社会課題について、みんなで話し合おう!</span>
+      <span class="message">社会課題について、みんなで話し合おう?</span>
     </div>
     <AllTopics />
   </div>
