@@ -19,6 +19,11 @@
         <div class="p-field">
           <Button icon="pi pi-check" label="ログイン" v-on:click="login" />
         </div>
+        <!-- 新規登録のリンクを追加 -->
+        <div class="p-field">
+          <router-link to="/register">新規登録</router-link>
+        </div>
+        <!-- end -->
       </template>
     </Card>
   </div>
