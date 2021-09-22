@@ -1,3 +1,4 @@
+import Button from 'primevue/button'
 <template>
   <div>
     <Card>
@@ -13,6 +14,10 @@
         <span>
           <router-link :to="`/user/${user.id}`">{{user.name}}</router-link>
         </span>
+          <!-- いいねボタン追加 -->
+          <span class="like">
+           <Button label="♡" class="p-button-help p-button-sm"/>
+          </span>
       </template>
     </Card>
     <Comments :comments="this.comments" />
