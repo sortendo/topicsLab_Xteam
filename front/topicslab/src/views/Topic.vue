@@ -50,6 +50,10 @@ export default {
     if (!this.id) {
       alert('不正なIDです。')
     }
+    if (localStorage.getItem('authenticated') !== 'true') {
+      this.$router.push('/login')
+      return
+    }
     this.getTopic()
   },
   methods: {
