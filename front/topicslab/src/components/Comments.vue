@@ -1,3 +1,5 @@
+import Button from "primevue/button"
+
 <template>
   <div>
     <Fieldset v-for="comment in comments" :key="comment.id">
@@ -7,6 +9,9 @@
       <div class="comment-text">
         {{comment.body}}
       </div>
+      <!-- いいねボタン -->
+      <Button label="♡" class="p-button-help p-button-sm"/>
+      <!-- end -->
     </Fieldset>
   </div>
 </template>
