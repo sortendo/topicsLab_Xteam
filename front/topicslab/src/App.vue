@@ -11,6 +11,8 @@
   <div class="content">
     <router-view/>
   </div>
+  <!-- コピーライトを追記 -->
+  <small class="content">&copy; 2021 Xteam</small>
 </template>
 
 <script>
