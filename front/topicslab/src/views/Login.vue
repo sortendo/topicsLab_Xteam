@@ -2,7 +2,7 @@
   <div>
     <Card>
       <template #title>
-        Login
+        ログイン
       </template>
       <template #content>
         <div class="fields">
@@ -15,9 +15,9 @@
             <InputText id="password" type="password" v-model="password" />
           </div>
         </div>
-        <span>{{message}}</span>
+        <span id="alart">{{message}}</span>
         <div class="p-field">
-          <Button icon="pi pi-check" label="Login" v-on:click="login" />
+          <Button icon="pi pi-check" label="ログイン" v-on:click="login" />
         </div>
       </template>
     </Card>
@@ -87,5 +87,8 @@ export default {
       width: 100%;
     }
   }
+}
+#alart{
+  color: red;
 }
 </style>
