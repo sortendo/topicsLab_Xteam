@@ -1,5 +1,3 @@
-import Button from 'primevue/button'
-
 <template>
   <div>
     <Card>
@@ -30,12 +28,15 @@ import Button from 'primevue/button'
 import axios from '@/supports/axios'
 import Comments from '@/components/Comments'
 import CommentForm from '@/components/CommentForm'
+import Button from 'primevue/button'
+
 
 export default {
   name: 'Topic',
   components: {
     Comments,
-    CommentForm
+    CommentForm,
+    Button
   },
   data () {
     return {
