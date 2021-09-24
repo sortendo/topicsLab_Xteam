@@ -6,6 +6,7 @@
       </template>
       <template #content>
         {{user.name}}
+        <UserContents />
       </template>
       <template #footer>
         <Button label="Create Topic" v-on:click="toNewTopic" />
@@ -17,10 +18,14 @@
 </template>
 
 <script>
+import UserContents from '@/components/UserContents'
 import axios from '@/supports/axios'
 
 export default {
   name: 'Userself',
+  components: {
+    UserContents
+  },
   data () {
     return {
       user: {}

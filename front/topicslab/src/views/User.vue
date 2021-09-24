@@ -3,16 +3,21 @@
     <Card>
       <template #content>
         {{user.name}}
+        <UserContents />
       </template>
     </Card>
   </div>
 </template>
 
 <script>
+import UserContents from '@/components/UserContents'
 import axios from '@/supports/axios'
 
 export default {
   name: 'user',
+  components: {
+    UserContents
+  },
   data () {
     return {
       id: null,
