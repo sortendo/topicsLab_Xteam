@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Users;
 
 class UserController extends Controller
 {
@@ -85,8 +87,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
+
+        public function destroy(Request $request)
+        {
+            Users::find(Auth::id())->delete();
+            // 項目19
+            // $id->softDelete();
+            // return redirect('/');
+        }
 }

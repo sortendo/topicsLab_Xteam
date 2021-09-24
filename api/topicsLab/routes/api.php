@@ -33,6 +33,12 @@ Route::post('/logout', [
     'logout'
 ]);
 
+// 項目19
+Route::middleware('auth:sanctum')->delete('/withdraw', [
+    App\Http\Controllers\UserController::class,
+    'destroy'
+]);
+
 Route::get('/topics', [
     App\Http\Controllers\TopicController::class,
     'index'
