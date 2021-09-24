@@ -1,5 +1,3 @@
-import Button from "primevue/button"
-
 <template>
   <div>
     <Fieldset v-for="comment in comments" :key="comment.id">
@@ -19,8 +17,13 @@ import Button from "primevue/button"
 </template>
 
 <script>
+import Button from 'primevue/button'
+
 export default {
   name: 'Comments',
+  components: {
+    Button
+  },
   props: {
     comments: Array
   }
