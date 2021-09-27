@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Card>
+    <Skeleton v-if="loading"></Skeleton>
+    <Card v-else>
       <template #content>
         {{user.name}}
         <UserContents />
@@ -12,16 +13,19 @@
 <script>
 import UserContents from '@/components/UserContents'
 import axios from '@/supports/axios'
+import Skeleton from 'primevue/skeleton'
 
 export default {
   name: 'user',
   components: {
-    UserContents
+    UserContents,
+    Skeleton
   },
   data () {
     return {
       id: null,
-      user: {}
+      user: {},
+      loading: false
     }
   },
   mounted () {
@@ -38,6 +42,7 @@ export default {
   },
   methods: {
     getUser () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.get(`/api/user/${this.id}`)
@@ -45,16 +50,20 @@ export default {
               console.log(res)
               if (res.status === 200) {
                 this.user = res.data
+                this.loading = false
               } else {
                 console.log('取得失敗')
+                this.loading = false
               }
             })
             .catch((err) => {
               console.log(err)
+              this.loading = false
             })
         })
         .catch((err) => {
           alert(err)
+          this.loading = false
         })
     }
   }

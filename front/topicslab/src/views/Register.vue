@@ -5,7 +5,8 @@
         Register
       </template>
       <template #content>
-        <div class="fields">
+        <Skeleton v-if="loading"></Skeleton>
+        <div class="fields" v-else>
           <div class="p-field">
             <label for="name">ユーザー名</label>
             <InputText id="name" type="text" v-model="name" />
@@ -30,15 +31,20 @@
 
 <script>
 import axios from '@/supports/axios'
+import Skeleton from 'primevue/skeleton'
 
 export default {
   name: 'Register',
+  components: {
+    Skeleton
+  },
   data () {
     return {
       name: '',
       email: '',
       password: '',
-      message: ''
+      message: '',
+      loading: false
     }
   },
   methods: {
@@ -51,6 +57,7 @@ export default {
         return
       }
 
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.post('/api/register', {
@@ -62,17 +69,21 @@ export default {
               if (res.status === 201) {
                 alert('ユーザー登録成功')
                 this.$router.push('/login')
+                this.loading = false
               } else {
                 this.message = 'ユーザー登録に失敗しました。'
+                this.loading = false
               }
             })
             .catch((err) => {
               console.log(err)
               this.message = 'ユーザー登録に失敗しました。'
+              this.loading = false
             })
         })
         .catch((err) => {
           alert(err)
+          this.loading = false
         })
     }
   }

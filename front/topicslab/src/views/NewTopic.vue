@@ -1,33 +1,40 @@
 <template>
-  <Card>
-    <template #title>
+  <div>
+    <Skeleton v-if="loading"></Skeleton>
+     <Card v-else>
+     <template #title>
       新しいTopicを投稿しよう
-    </template>
-    <template #content>
-      <div class="p-field">
-        <label for="title">Topicタイトル</label>
-        <InputText v-model="title" id="title" type="text" aria-describedby="title-help" />
-        <small id="title-help">タイトルを入力してください。</small>
-        <span class="error">{{messages.title}}</span>
-      </div>
-      <div class="p-field">
-        <label for="title">Topic内容</label>
-        <Textarea v-model="body" :autoResize="true" rows="10" />
-        <span class="error">{{messages.body}}</span>
-      </div>
+     </template>
+     <template #content>
+        <div class="p-field">
+          <label for="title">Topicタイトル</label>
+          <InputText v-model="title" id="title" type="text" aria-describedby="title-help" />
+          <small id="title-help">タイトルを入力してください。</small>
+          <span class="error">{{messages.title}}</span>
+        </div>
+        <div class="p-field">
+          <label for="title">Topic内容</label>
+          <Textarea v-model="body" :autoResize="true" rows="10" />
+          <span class="error">{{messages.body}}</span>
+        </div>
       <div class="p-field">
         <Button icon="pi pi-check" label="Save" v-on:click="submit" />
         <span class="error">{{messages.submit}}</span>
       </div>
     </template>
   </Card>
+  </div>
 </template>
 
 <script>
 import axios from '@/supports/axios'
+import Skeleton from 'primevue/skeleton'
 
 export default {
   name: 'NewTopic',
+  components: {
+    Skeleton
+  },
   data () {
     return {
       title: '',
@@ -36,7 +43,8 @@ export default {
         submit: '',
         title: '',
         body: ''
-      }
+      },
+      loading: false
     }
   },
   mounted () {
@@ -57,6 +65,7 @@ export default {
 
       if (!title || !body) return
 
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.post('/api/topic', {
@@ -66,17 +75,21 @@ export default {
             .then((res) => {
               if (res.status === 201) {
               //
+                this.loadng = false
               } else {
                 this.messages.submit = '送信に失敗しました。'
+                this.loadng = false
               }
             })
             .catch((err) => {
               console.log(err)
               this.messages.submit = '送信に失敗しました。'
+              this.loadng = false
             })
         })
         .catch((err) => {
           alert(err)
+          this.loadng = false
         })
     }
   }

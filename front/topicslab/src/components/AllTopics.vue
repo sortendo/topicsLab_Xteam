@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Card v-for="topic in topics" :key="topic.id">
+    <Skeleton v-if="loading"></Skeleton>
+    <Card v-for="topic in topics" :key="topic.id" v-else>
         <template #content>
           <span class="topic-date">投稿日：{{moment(topic.created_at)}}</span>
           <h2>
@@ -16,12 +17,17 @@
 <script>
 import axios from '@/supports/axios'
 import moment from 'moment'
+import Skeleton from 'primevue/skeleton'
 
 export default {
   name: 'AllTopics',
+  components: {
+    Skeleton
+  },
   data () {
     return {
-      topics: []
+      topics: [],
+      loading: false
     }
   },
   mounted () {
@@ -32,6 +38,7 @@ export default {
       return moment(date).format('YYYY/MM/DD HH:mm:SS')
     },
     getAllTopics () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.get('/api/topics')
@@ -39,13 +46,16 @@ export default {
               if (res.status === 200) {
                 this.topics.splice(0)
                 this.topics.push(...res.data)
+                this.loading = false
               } else {
                 console.log('取得失敗')
+                this.loading = false
               }
             })
         })
         .catch((err) => {
           alert(err)
+          this.loading = false
         })
     }
   }

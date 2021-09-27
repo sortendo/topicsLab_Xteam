@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Card>
+    <Skeleton v-if="loading"></Skeleton>
+    <Card v-else>
       <template #title>
         {{topic.title}}
       </template>
@@ -20,7 +21,7 @@
       </template>
     </Card>
     <Comments :comments="this.comments" />
-    <CommentForm :topicId="this.topic.id" @sentComment="receiveComment" />
+    <CommentForm class="comment-form" :topicId="this.topic.id" @sentComment="receiveComment" />
   </div>
 </template>
 
@@ -29,21 +30,23 @@ import axios from '@/supports/axios'
 import Comments from '@/components/Comments'
 import CommentForm from '@/components/CommentForm'
 import Button from 'primevue/button'
-
+import Skeleton from 'primevue/skeleton'
 
 export default {
   name: 'Topic',
   components: {
     Comments,
     CommentForm,
-    Button
+    Button,
+    Skeleton
   },
   data () {
     return {
       topic: {},
       user: {},
       comments: [],
-      id: null
+      id: null,
+      loading: true
     }
   },
   mounted () {
@@ -59,6 +62,7 @@ export default {
   },
   methods: {
     getTopic () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.get(`/api/topic/${this.id}`)
@@ -68,16 +72,20 @@ export default {
                 this.user = this.topic.user
                 this.comments.splice(0)
                 this.comments.push(...this.topic.comments)
+                this.loading = false
               } else {
                 console.log('取得失敗')
+                this.loading = false
               }
             })
             .catch((err) => {
               console.log(err)
+              this.loading = false
             })
         })
         .catch((err) => {
           alert(err)
+          this.loading = false
         })
     },
     receiveComment (comment) {
@@ -94,5 +102,8 @@ export default {
 .p-card-footer span {
   text-align: right;
   display: block;
+}
+.comment-form{
+  margin-top: 50px;
 }
 </style>

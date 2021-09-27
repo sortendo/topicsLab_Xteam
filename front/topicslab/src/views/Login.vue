@@ -5,7 +5,8 @@
         ログイン
       </template>
       <template #content>
-        <div class="fields">
+        <Skeleton v-if="loading"></Skeleton>
+        <div class="fields" v-else>
           <div class="p-field">
             <label for="email">メールアドレス</label>
             <InputText id="email" type="email" v-model="email" />
@@ -31,19 +32,24 @@
 
 <script>
 import axios from '@/supports/axios'
-
+import Skeleton from 'primevue/skeleton'
 export default {
   name: 'Login',
+  components: {
+    Skeleton
+  },
   data () {
     return {
       email: '',
       password: '',
       error: false,
-      message: ''
+      message: '',
+      loading: false
     }
   },
   methods: {
     login () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.post('/api/login', {
@@ -54,17 +60,21 @@ export default {
               if (res.status === 200) {
                 console.log('ログイン成功')
                 localStorage.setItem('authenticated', 'true')
+                this.loading = false
               } else {
                 this.message = 'ログインに失敗しました。'
+                this.loading = false
               }
             })
             .catch((err) => {
               console.log(err)
               this.message = 'ログインに失敗しました。'
+              this.loading = false
             })
         })
         .catch((err) => {
           alert(err)
+          this.loading = false
         })
     }
   }
@@ -76,16 +86,13 @@ export default {
   .fields {
     text-align: center;
   }
-
   .p-field {
     display: block;
-
     label {
       display: inline-block;
       width: 10em;
       margin-bottom: 10px;
     }
-
     .p-button {
       margin-top: 20px;
       display: block;
