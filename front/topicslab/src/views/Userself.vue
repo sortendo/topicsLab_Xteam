@@ -61,7 +61,22 @@ export default {
         })
     },
     withdraw () {
-      //
+      //  項目番号19
+      axios.get('/sanctum/csrf-cookie')
+        .then(() => {
+          axios.delete('/api/withdraw') // logout -> withdoraw
+            .then(res => {
+              console.log(res)
+              localStorage.setItem('authenticated', 'false')
+              this.$router.push('/') // login -> ''
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        })
+        .catch((err) => {
+          alert(err)
+        })
     },
     getUser () {
       axios.get('/sanctum/csrf-cookie')
