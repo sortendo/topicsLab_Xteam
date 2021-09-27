@@ -1,5 +1,9 @@
 <template>
   <div>
+    <!-- ダイアログボックス -->
+    <Dialog header="ERROR" v-model:visible="display" >
+      <span>{{message}}</span>
+    </Dialog>
     <Card v-for="topic in topics" :key="topic.id">
         <template #content>
           <span class="topic-date">投稿日：{{moment(topic.created_at)}}</span>
@@ -16,12 +20,18 @@
 <script>
 import axios from '@/supports/axios'
 import moment from 'moment'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'AllTopics',
+  components: {
+    Dialog
+  },
   data () {
     return {
-      topics: []
+      topics: [],
+      message: '',
+      display: false
     }
   },
   mounted () {
@@ -32,7 +42,7 @@ export default {
       return moment(date).format('YYYY/MM/DD HH:mm:SS')
     },
     getAllTopics () {
-      axios.get('/sanctum/csrf-cookie')
+      axios.get('/sanctum/csrf-cookieaaa')
         .then(() => {
           axios.get('/api/topics')
             .then((res) => {
@@ -41,11 +51,21 @@ export default {
                 this.topics.push(...res.data)
               } else {
                 console.log('取得失敗')
+                this.message = 'Topic取得失敗'
+                this.display = true
               }
+            })
+            .catch((err) => {
+              console.log(err)
+              this.message = 'Topic取得失敗'
+              // 指示書21 ダイアログを表示
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
+          this.message = 'Topic取得失敗'
+          this.display = true
+          console.log(err)
         })
     }
   }
