@@ -42,7 +42,7 @@ export default {
       return moment(date).format('YYYY/MM/DD HH:mm:SS')
     },
     getAllTopics () {
-      axios.get('/sanctum/csrf-cookieaaa')
+      axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.get('/api/topics')
             .then((res) => {
