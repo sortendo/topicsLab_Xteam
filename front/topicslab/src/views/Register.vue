@@ -5,6 +5,10 @@
         Register
       </template>
       <template #content>
+        <!-- 指示書21 ダイアログボックス -->
+        <Dialog header="ERROR" v-model:visible="display" >
+          <span>{{message}}</span>
+        </Dialog>
         <div class="fields">
           <div class="p-field">
             <label for="name">ユーザー名</label>
@@ -19,7 +23,6 @@
             <InputText id="password" type="password" v-model="password" />
           </div>
         </div>
-        <span>{{message}}</span>
         <div class="p-field">
           <Button icon="pi pi-check" label="Register" v-on:click="register" />
         </div>
@@ -30,15 +33,21 @@
 
 <script>
 import axios from '@/supports/axios'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'Register',
+  components: {
+    Dialog
+  },
   data () {
     return {
       name: '',
       email: '',
       password: '',
-      message: ''
+      message: '',
+      // 指示書21 ダイアログを基本は非表示にする
+      display: false
     }
   },
   methods: {
@@ -47,7 +56,9 @@ export default {
       const email = this.email.trim()
       const password = this.password.trim()
       if (!name || !email || !password) {
-        this.message = '全て必須項目です。'
+        this.message = 'ユーザー名、メールアドレス、パスワードは全て必須項目です。'
+        // 指示書21 ダイアログを表示
+        this.display = true
         return
       }
 
@@ -64,15 +75,21 @@ export default {
                 this.$router.push('/login')
               } else {
                 this.message = 'ユーザー登録に失敗しました。'
+                // 指示書21 ダイアログを表示
+                this.display = true
               }
             })
             .catch((err) => {
               console.log(err)
               this.message = 'ユーザー登録に失敗しました。'
+              // 指示書21 ダイアログを表示
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
+          console.log(err)
+          this.message = '取得失敗'
+          this.display = true
         })
     }
   }
