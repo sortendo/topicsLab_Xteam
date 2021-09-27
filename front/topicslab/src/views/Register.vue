@@ -7,6 +7,11 @@
       <template #content>
         <Skeleton v-if="loading"></Skeleton>
         <div class="fields" v-else>
+        <!-- 指示書21 ダイアログボックス -->
+        <Dialog header="ERROR" v-model:visible="display" >
+          <span>{{message}}</span>
+        </Dialog>
+        <div class="fields">
           <div class="p-field">
             <label for="name">ユーザー名</label>
             <InputText id="name" type="text" v-model="name" />
@@ -20,7 +25,6 @@
             <InputText id="password" type="password" v-model="password" />
           </div>
         </div>
-        <span>{{message}}</span>
         <div class="p-field">
           <Button icon="pi pi-check" label="Register" v-on:click="register" />
         </div>
@@ -32,11 +36,13 @@
 <script>
 import axios from '@/supports/axios'
 import Skeleton from 'primevue/skeleton'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'Register',
   components: {
-    Skeleton
+    Skeleton,
+    Dialog
   },
   data () {
     return {
@@ -44,7 +50,9 @@ export default {
       email: '',
       password: '',
       message: '',
-      loading: false
+      loading: false,
+      // 指示書21 ダイアログを基本は非表示にする
+      display: false
     }
   },
   methods: {
@@ -53,7 +61,9 @@ export default {
       const email = this.email.trim()
       const password = this.password.trim()
       if (!name || !email || !password) {
-        this.message = '全て必須項目です。'
+        this.message = 'ユーザー名、メールアドレス、パスワードは全て必須項目です。'
+        // 指示書21 ダイアログを表示
+        this.display = true
         return
       }
 
@@ -71,19 +81,24 @@ export default {
                 this.$router.push('/login')
                 this.loading = false
               } else {
-                this.message = 'ユーザー登録に失敗しました。'
                 this.loading = false
+                this.message = 'ユーザー登録に失敗しました。'
+                // 指示書21 ダイアログを表示
+                this.display = true
               }
             })
             .catch((err) => {
               console.log(err)
-              this.message = 'ユーザー登録に失敗しました。'
               this.loading = false
+              this.message = 'ユーザー登録に失敗しました。'
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
           this.loading = false
+          console.log(err)
+          this.message = '取得失敗'
+          this.display = true
         })
     }
   }

@@ -6,6 +6,10 @@
         {{topic.title}}
       </template>
       <template #content>
+        <!-- 指示書21 ダイアログボックス -->
+        <Dialog header="ERROR" v-model:visible="display" >
+          <span>{{message}}</span>
+        </Dialog>
         <div class="body-text">
           {{topic.body}}
         </div>
@@ -31,6 +35,7 @@ import Comments from '@/components/Comments'
 import CommentForm from '@/components/CommentForm'
 import Button from 'primevue/button'
 import Skeleton from 'primevue/skeleton'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'Topic',
@@ -38,7 +43,8 @@ export default {
     Comments,
     CommentForm,
     Button,
-    Skeleton
+    Skeleton,
+    Dialog
   },
   data () {
     return {
@@ -46,13 +52,17 @@ export default {
       user: {},
       comments: [],
       id: null,
-      loading: true
+      loading: true,
+      // 指示書21 ダイアログを基本は非表示にする
+      message: '',
+      display: false
     }
   },
   mounted () {
     this.id = this.$route.params.id
     if (!this.id) {
-      alert('不正なIDです。')
+      this.message = '不正なIDです。'
+      this.display = true
     }
     if (localStorage.getItem('authenticated') !== 'true') {
       this.$router.push('/login')
@@ -74,18 +84,25 @@ export default {
                 this.comments.push(...this.topic.comments)
                 this.loading = false
               } else {
-                console.log('取得失敗')
                 this.loading = false
+                console.log('取得失敗しました')
+                // 指示書21 ダイアログを表示
+                this.message = '取得失敗しました'
+                this.display = true
               }
             })
             .catch((err) => {
               console.log(err)
               this.loading = false
+                // 指示書21 ダイアログを表示
+              this.message = '取得失敗しました'
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
           this.loading = false
+          this.message = '取得失敗'
+          this.display = true
         })
     },
     receiveComment (comment) {
