@@ -5,6 +5,10 @@
         mypage
       </template>
       <template #content>
+        <!-- ダイアログボックス -->
+        <Dialog header="ERROR" v-model:visible="display" >
+          <span>{{message}}</span>
+        </Dialog>
         {{user.name}}
         <UserContents />
       </template>
@@ -20,15 +24,19 @@
 <script>
 import UserContents from '@/components/UserContents'
 import axios from '@/supports/axios'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'Userself',
   components: {
-    UserContents
+    UserContents,
+    Dialog
   },
   data () {
     return {
-      user: {}
+      user: {},
+      message: '',
+      display: false
     }
   },
   mounted () {
@@ -54,10 +62,14 @@ export default {
             })
             .catch(err => {
               console.log(err)
+              this.message = 'ログアウトに失敗しました'
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
+          console.log(err)
+          this.message = 'ログアウトに失敗しました'
+          this.display = true
         })
     },
     withdraw () {
@@ -72,10 +84,14 @@ export default {
             })
             .catch(err => {
               console.log(err)
+              this.message = 'アカウント削除に失敗しました'
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
+          console.log(err)
+          this.message = 'アカウント削除に失敗しました'
+          this.display = true
         })
     },
     getUser () {
@@ -87,11 +103,15 @@ export default {
                 this.user = res.data
               } else {
                 console.log('取得失敗')
+                this.message = '取得失敗'
+                this.display = true
               }
             })
         })
         .catch((err) => {
-          alert(err)
+          console.log(err)
+          this.message = '取得失敗'
+          this.display = true
         })
     }
   }
