@@ -59,8 +59,12 @@ export default {
               }
             })
             .catch((err) => {
-              console.log(err)
-              this.message = 'ログインに失敗しました。'
+              if (err.response.status === 403) {
+                this.message = '退会済みのユーザーです。'
+              } else {
+                console.log(err)
+                this.message = 'ログインに失敗しました。'
+              }
             })
         })
         .catch((err) => {
