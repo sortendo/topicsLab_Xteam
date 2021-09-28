@@ -11,7 +11,6 @@
         <Dialog header="ERROR" v-model:visible="display" >
           <span>{{message}}</span>
         </Dialog>
-        <div class="fields">
           <div class="p-field">
             <label for="name">ユーザー名</label>
             <InputText id="name" type="text" v-model="name" />
