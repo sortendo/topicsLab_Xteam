@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Card>
+    <Skeleton v-if="loading"></Skeleton>
+    <Card v-else>
       <template #title>
         {{topic.title}}
       </template>
@@ -24,7 +25,7 @@
       </template>
     </Card>
     <Comments :comments="this.comments" />
-    <CommentForm :topicId="this.topic.id" @sentComment="receiveComment" />
+    <CommentForm class="comment-form" :topicId="this.topic.id" @sentComment="receiveComment" />
   </div>
 </template>
 
@@ -33,6 +34,7 @@ import axios from '@/supports/axios'
 import Comments from '@/components/Comments'
 import CommentForm from '@/components/CommentForm'
 import Button from 'primevue/button'
+import Skeleton from 'primevue/skeleton'
 import Dialog from 'primevue/dialog'
 
 export default {
@@ -41,6 +43,7 @@ export default {
     Comments,
     CommentForm,
     Button,
+    Skeleton,
     Dialog
   },
   data () {
@@ -49,6 +52,7 @@ export default {
       user: {},
       comments: [],
       id: null,
+      loading: true,
       // 指示書21 ダイアログを基本は非表示にする
       message: '',
       display: false
@@ -68,6 +72,7 @@ export default {
   },
   methods: {
     getTopic () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.get(`/api/topic/${this.id}`)
@@ -77,7 +82,9 @@ export default {
                 this.user = this.topic.user
                 this.comments.splice(0)
                 this.comments.push(...this.topic.comments)
+                this.loading = false
               } else {
+                this.loading = false
                 console.log('取得失敗しました')
                 // 指示書21 ダイアログを表示
                 this.message = '取得失敗しました'
@@ -86,13 +93,14 @@ export default {
             })
             .catch((err) => {
               console.log(err)
-              // 指示書21 ダイアログを表示
+              this.loading = false
+                // 指示書21 ダイアログを表示
               this.message = '取得失敗しました'
               this.display = true
             })
         })
         .catch((err) => {
-          console.log(err)
+          this.loading = false
           this.message = '取得失敗'
           this.display = true
         })
@@ -111,5 +119,8 @@ export default {
 .p-card-footer span {
   text-align: right;
   display: block;
+}
+.comment-form{
+  margin-top: 50px;
 }
 </style>

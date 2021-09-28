@@ -5,11 +5,14 @@
         ログイン
       </template>
       <template #content>
-        <!-- 指示書21 ダイアログボックス -->
+           
+         <!-- 指示書21 ダイアログボックス -->
         <Dialog header="ERROR" v-model:visible="display" >
           <span id="alart">{{message}}</span>
         </Dialog>
-        <div class="fields">
+        
+        <Skeleton v-if="loading"></Skeleton>
+        <div class="fields" v-else>   
           <div class="p-field">
             <label for="email">メールアドレス</label>
             <InputText id="email" type="email" v-model="email" />
@@ -34,12 +37,14 @@
 
 <script>
 import axios from '@/supports/axios'
+import Skeleton from 'primevue/skeleton'
 import Dialog from 'primevue/dialog'
 
 export default {
   name: 'Login',
   components: {
-    Dialog
+    Dialog,
+    Skeleton
   },
   data () {
     return {
@@ -47,12 +52,14 @@ export default {
       password: '',
       error: false,
       message: '',
+      loading: false,
       // 指示書21 ダイアログを基本は非表示にする
       display: false
     }
   },
   methods: {
     login () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.post('/api/login', {
@@ -63,7 +70,9 @@ export default {
               if (res.status === 200) {
                 console.log('ログイン成功')
                 localStorage.setItem('authenticated', 'true')
+                this.loading = false
               } else {
+                this.loading = false
                 this.message = 'ログインに失敗しました。'
                 // 指示書21 ダイアログを表示
                 this.display = true
@@ -71,12 +80,14 @@ export default {
             })
             .catch((err) => {
               console.log(err)
+              this.loading = false
               this.message = 'ログインに失敗しました。メールアドレスとパスワードを確認してください。'
               // 指示書21 ダイアログを表示
               this.display = true
             })
         })
         .catch((err) => {
+          this.loading = false
           console.log(err)
           this.message = '取得失敗'
           this.display = true
@@ -91,16 +102,13 @@ export default {
   .fields {
     text-align: center;
   }
-
   .p-field {
     display: block;
-
     label {
       display: inline-block;
       width: 10em;
       margin-bottom: 10px;
     }
-
     .p-button {
       margin-top: 20px;
       display: block;

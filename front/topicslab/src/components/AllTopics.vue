@@ -1,5 +1,7 @@
 <template>
   <div>
+    <Skeleton v-if="loading"></Skeleton>
+    <Card v-for="topic in topics" :key="topic.id" v-else>
     <!-- ダイアログボックス -->
     <Dialog header="ERROR" v-model:visible="display" >
       <span>{{message}}</span>
@@ -20,16 +22,19 @@
 <script>
 import axios from '@/supports/axios'
 import moment from 'moment'
+import Skeleton from 'primevue/skeleton'
 import Dialog from 'primevue/dialog'
 
 export default {
   name: 'AllTopics',
   components: {
+    Skeleton,
     Dialog
   },
   data () {
     return {
       topics: [],
+      loading: false,
       message: '',
       display: false
     }
@@ -42,6 +47,7 @@ export default {
       return moment(date).format('YYYY/MM/DD HH:mm:SS')
     },
     getAllTopics () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.get('/api/topics')
@@ -49,8 +55,10 @@ export default {
               if (res.status === 200) {
                 this.topics.splice(0)
                 this.topics.push(...res.data)
+                this.loading = false
               } else {
                 console.log('取得失敗')
+                this.loading = false
                 this.message = 'Topic取得失敗'
                 this.display = true
               }
@@ -63,6 +71,7 @@ export default {
             })
         })
         .catch((err) => {
+          this.loading = false
           this.message = 'Topic取得失敗'
           this.display = true
           console.log(err)
