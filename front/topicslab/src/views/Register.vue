@@ -5,11 +5,12 @@
         Register
       </template>
       <template #content>
+        <Skeleton v-if="loading"></Skeleton>
+        <div class="fields" v-else>
         <!-- 指示書21 ダイアログボックス -->
         <Dialog header="ERROR" v-model:visible="display" >
           <span>{{message}}</span>
         </Dialog>
-        <div class="fields">
           <div class="p-field">
             <label for="name">ユーザー名</label>
             <InputText id="name" type="text" v-model="name" />
@@ -33,11 +34,13 @@
 
 <script>
 import axios from '@/supports/axios'
+import Skeleton from 'primevue/skeleton'
 import Dialog from 'primevue/dialog'
 
 export default {
   name: 'Register',
   components: {
+    Skeleton,
     Dialog
   },
   data () {
@@ -46,6 +49,7 @@ export default {
       email: '',
       password: '',
       message: '',
+      loading: false,
       // 指示書21 ダイアログを基本は非表示にする
       display: false
     }
@@ -62,6 +66,7 @@ export default {
         return
       }
 
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.post('/api/register', {
@@ -73,7 +78,9 @@ export default {
               if (res.status === 201) {
                 alert('ユーザー登録成功')
                 this.$router.push('/login')
+                this.loading = false
               } else {
+                this.loading = false
                 this.message = 'ユーザー登録に失敗しました。'
                 // 指示書21 ダイアログを表示
                 this.display = true
@@ -81,12 +88,13 @@ export default {
             })
             .catch((err) => {
               console.log(err)
+              this.loading = false
               this.message = 'ユーザー登録に失敗しました。'
-              // 指示書21 ダイアログを表示
               this.display = true
             })
         })
         .catch((err) => {
+          this.loading = false
           console.log(err)
           this.message = '取得失敗'
           this.display = true

@@ -1,38 +1,44 @@
 <template>
-  <Card>
-    <template #title>
-      新しいTopicを投稿しよう
-    </template>
-    <template #content>
-      <!-- 指示書21 ダイアログボックス -->
-      <Dialog header="ERROR" v-model:visible="display" >
+  <div>
+     <Dialog header="ERROR" v-model:visible="display" >
         <span class="error">{{messages.title}}</span>
         <span class="error">{{messages.body}}</span>
         <span class="error">{{messages.submit}}</span>
       </Dialog>
-      <div class="p-field">
-        <label for="title">Topicタイトル</label>
-        <InputText v-model="title" id="title" type="text" aria-describedby="title-help" />
-        <small id="title-help">タイトルを入力してください。</small>
-      </div>
-      <div class="p-field">
-        <label for="title">Topic内容</label>
-        <Textarea v-model="body" :autoResize="true" rows="10" />
-      </div>
-      <div class="p-field">
-        <Button icon="pi pi-check" label="Save" v-on:click="submit" />
-      </div>
-    </template>
-  </Card>
+     <Skeleton v-if="loading"></Skeleton>
+     <Card v-else>
+     <template #title>
+      新しいTopicを投稿しよう
+     </template>
+     <template #content>
+        <div class="p-field">
+          <label for="title">Topicタイトル</label>
+          <InputText v-model="title" id="title" type="text" aria-describedby="title-help" />
+          <small id="title-help">タイトルを入力してください。</small>
+          <span class="error">{{messages.title}}</span>
+        </div>
+        <div class="p-field">
+          <label for="title">Topic内容</label>
+          <Textarea v-model="body" :autoResize="true" rows="10" />
+          <span class="error">{{messages.body}}</span>
+        </div>
+        <div class="p-field">
+          <Button icon="pi pi-check" label="Save" v-on:click="submit" />
+        </div>
+      </template>
+    </Card>
+  </div>
 </template>
 
 <script>
 import axios from '@/supports/axios'
+import Skeleton from 'primevue/skeleton'
 import Dialog from 'primevue/dialog'
 
 export default {
   name: 'NewTopic',
   components: {
+    Skeleton,
     Dialog
   },
   data () {
@@ -44,6 +50,7 @@ export default {
         title: '',
         body: ''
       },
+      loading: false,
       // 指示書21 ダイアログを基本は非表示にする
       display: false
     }
@@ -68,6 +75,7 @@ export default {
 
       if (!title || !body) return
 
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.post('/api/topic', {
@@ -77,7 +85,9 @@ export default {
             .then((res) => {
               if (res.status === 201) {
               //
+                this.loadng = false
               } else {
+                this.loadng = false
                 this.messages.submit = '送信に失敗しました。'
                 // 指示書21 ダイアログを表示
                 this.display = true
@@ -85,12 +95,14 @@ export default {
             })
             .catch((err) => {
               console.log(err)
+
+              this.loadng = false
               this.messages.submit = '送信に失敗しました。'
-              // 指示書21 ダイアログを表示
               this.display = true
             })
         })
         .catch((err) => {
+          this.loadng = false
           console.log(err)
           this.message = '取得失敗'
           this.display = true

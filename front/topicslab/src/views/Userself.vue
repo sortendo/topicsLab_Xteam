@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Card>
+    <Skeleton v-if="loading"></Skeleton>
+    <Card v-else>
       <template #title>
         mypage
       </template>
@@ -24,17 +25,20 @@
 <script>
 import UserContents from '@/components/UserContents'
 import axios from '@/supports/axios'
+import Skeleton from 'primevue/skeleton'
 import Dialog from 'primevue/dialog'
 
 export default {
   name: 'Userself',
   components: {
     UserContents,
+    Skeleton,
     Dialog
   },
   data () {
     return {
       user: {},
+      loading: false,
       message: '',
       display: false
     }
@@ -52,6 +56,7 @@ export default {
       this.$router.push('topic')
     },
     logout () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.post('/api/logout')
@@ -59,20 +64,24 @@ export default {
               console.log(res)
               localStorage.setItem('authenticated', 'false')
               this.$router.push('/login')
+              this.loading = false
             })
             .catch(err => {
               console.log(err)
+              this.loading = false
               this.message = 'ログアウトに失敗しました'
               this.display = true
             })
         })
         .catch((err) => {
+          this.loading = false
           console.log(err)
           this.message = 'ログアウトに失敗しました'
           this.display = true
         })
     },
     withdraw () {
+      this.loading = true
       //  項目番号19
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
@@ -81,34 +90,42 @@ export default {
               console.log(res)
               localStorage.setItem('authenticated', 'false')
               this.$router.push('/') // login -> ''
+              this.loading = false
             })
             .catch(err => {
               console.log(err)
+              this.loading = false
               this.message = 'アカウント削除に失敗しました'
               this.display = true
             })
         })
         .catch((err) => {
+          this.loading = false
           console.log(err)
           this.message = 'アカウント削除に失敗しました'
           this.display = true
         })
     },
     getUser () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.get('/api/user')
             .then((res) => {
               if (res.status === 200) {
                 this.user = res.data
+                this.loading = false
               } else {
                 console.log('取得失敗')
                 this.message = '取得失敗'
                 this.display = true
+
+                this.loading = false
               }
             })
         })
         .catch((err) => {
+          this.loading = false
           console.log(err)
           this.message = '取得失敗'
           this.display = true
