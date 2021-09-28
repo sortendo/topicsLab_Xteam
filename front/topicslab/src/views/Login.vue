@@ -5,7 +5,14 @@
         ログイン
       </template>
       <template #content>
-        <div class="fields">
+           
+         <!-- 指示書21 ダイアログボックス -->
+        <Dialog header="ERROR" v-model:visible="display" >
+          <span id="alart">{{message}}</span>
+        </Dialog>
+        
+        <Skeleton v-if="loading"></Skeleton>
+        <div class="fields" v-else>   
           <div class="p-field">
             <label for="email">メールアドレス</label>
             <InputText id="email" type="email" v-model="email" />
@@ -15,7 +22,6 @@
             <InputText id="password" type="password" v-model="password" />
           </div>
         </div>
-        <span id="alart">{{message}}</span>
         <div class="p-field">
           <Button icon="pi pi-check" label="ログイン" v-on:click="login" />
         </div>
@@ -31,19 +37,29 @@
 
 <script>
 import axios from '@/supports/axios'
+import Skeleton from 'primevue/skeleton'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'Login',
+  components: {
+    Dialog,
+    Skeleton
+  },
   data () {
     return {
       email: '',
       password: '',
       error: false,
-      message: ''
+      message: '',
+      loading: false,
+      // 指示書21 ダイアログを基本は非表示にする
+      display: false
     }
   },
   methods: {
     login () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.post('/api/login', {
@@ -54,21 +70,32 @@ export default {
               if (res.status === 200) {
                 console.log('ログイン成功')
                 localStorage.setItem('authenticated', 'true')
+                this.loading = false
               } else {
+                this.loading = false
                 this.message = 'ログインに失敗しました。'
+                // 指示書21 ダイアログを表示
+                this.display = true
               }
             })
             .catch((err) => {
+
               if (err.response.status === 403) {
                 this.message = '退会済みのユーザーです。'
               } else {
                 console.log(err)
                 this.message = 'ログインに失敗しました。'
               }
+              this.loading = false
+              this.display = true
+
             })
         })
         .catch((err) => {
-          alert(err)
+          this.loading = false
+          console.log(err)
+          this.message = '取得失敗'
+          this.display = true
         })
     }
   }
@@ -80,16 +107,13 @@ export default {
   .fields {
     text-align: center;
   }
-
   .p-field {
     display: block;
-
     label {
       display: inline-block;
       width: 10em;
       margin-bottom: 10px;
     }
-
     .p-button {
       margin-top: 20px;
       display: block;

@@ -1,5 +1,11 @@
 <template>
   <div>
+    <Skeleton v-if="loading"></Skeleton>
+    <Card v-for="topic in topics" :key="topic.id" v-else>
+    <!-- ダイアログボックス -->
+    <Dialog header="ERROR" v-model:visible="display" >
+      <span>{{message}}</span>
+    </Dialog>
     <Card v-for="topic in topics" :key="topic.id">
         <template #content>
           <span class="topic-date">投稿日：{{moment(topic.created_at)}}</span>
@@ -16,12 +22,21 @@
 <script>
 import axios from '@/supports/axios'
 import moment from 'moment'
+import Skeleton from 'primevue/skeleton'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'AllTopics',
+  components: {
+    Skeleton,
+    Dialog
+  },
   data () {
     return {
-      topics: []
+      topics: [],
+      loading: false,
+      message: '',
+      display: false
     }
   },
   mounted () {
@@ -32,6 +47,7 @@ export default {
       return moment(date).format('YYYY/MM/DD HH:mm:SS')
     },
     getAllTopics () {
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.get('/api/topics')
@@ -39,13 +55,26 @@ export default {
               if (res.status === 200) {
                 this.topics.splice(0)
                 this.topics.push(...res.data)
+                this.loading = false
               } else {
                 console.log('取得失敗')
+                this.loading = false
+                this.message = 'Topic取得失敗'
+                this.display = true
               }
+            })
+            .catch((err) => {
+              console.log(err)
+              this.message = 'Topic取得失敗'
+              // 指示書21 ダイアログを表示
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
+          this.loading = false
+          this.message = 'Topic取得失敗'
+          this.display = true
+          console.log(err)
         })
     }
   }

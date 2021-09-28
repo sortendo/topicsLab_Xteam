@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Card>
+    <Skeleton v-if="loading"></Skeleton>
+    <Card v-else>
       <template #content>
         <div class="p-field">
           <Textarea v-model="comment" :autoResize="true" rows="5" />
@@ -16,16 +17,21 @@
 
 <script>
 import axios from '@/supports/axios'
+import Skeleton from 'primevue/skeleton'
 
 export default {
   name: 'CommentForm',
+  components: {
+    Skeleton
+  },
   props: {
     topicId: Number
   },
   data () {
     return {
       comment: '',
-      message: ''
+      message: '',
+      loading: false
     }
   },
   methods: {
@@ -36,6 +42,7 @@ export default {
         return
       }
 
+      this.loading = true
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.post('/api/comment', {
@@ -46,17 +53,21 @@ export default {
               if (res.status === 201) {
                 this.comment = ''
                 this.$emit('sentComment', res.data)
+                this.loading = false
               } else {
                 this.message = '送信に失敗しました。'
+                this.loading = false
               }
             })
             .catch((err) => {
               console.log(err)
               this.message = '送信に失敗しました。'
+              this.loading = false
             })
         })
         .catch((err) => {
           alert(err)
+          this.loading = false
         })
     }
   }
