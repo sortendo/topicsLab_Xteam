@@ -5,26 +5,29 @@
         Register
       </template>
       <template #content>
-        <Skeleton v-if="loading"></Skeleton>
-        <div class="fields" v-else>
+        <div class="fields">
         <!-- 指示書21 ダイアログボックス -->
         <Dialog header="ERROR" v-model:visible="display" >
           <span>{{message}}</span>
         </Dialog>
-          <div class="p-field">
+          <Skeleton class="skeleton" v-if="loading" width="320px" height="35px"></Skeleton>
+          <div class="p-field" v-else>
             <label for="name">ユーザー名</label>
             <InputText id="name" type="text" v-model="name" />
           </div>
-          <div class="p-field">
+          <Skeleton class="skeleton" v-if="loading" width="320px" height="35px"></Skeleton>
+          <div class="p-field" v-else>
             <label for="email">メールアドレス</label>
             <InputText id="email" type="email" v-model="email" />
           </div>
-          <div class="p-field">
+          <Skeleton class="skeleton" v-if="loading" width="320px" height="35px"></Skeleton>
+          <div class="p-field" v-else>
             <label for="password">パスワード</label>
             <InputText id="password" type="password" v-model="password" />
           </div>
         </div>
-        <div class="p-field">
+        <Skeleton class="skeleton" v-if="loading" width="530px" height="35px"></Skeleton>
+        <div class="p-field" v-else>
           <Button icon="pi pi-check" label="Register" v-on:click="register" />
         </div>
       </template>
@@ -125,5 +128,8 @@ export default {
       width: 100%;
     }
   }
+}
+.skeleton{
+  margin: 10px auto 0;
 }
 </style>

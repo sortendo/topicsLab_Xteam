@@ -9,18 +9,23 @@
         <Dialog header="ERROR" v-model:visible="display" >
           <span id="alart">{{message}}</span>
         </Dialog>
-        <Skeleton v-if="loading"></Skeleton>
-        <div class="fields" v-else>
-          <div class="p-field">
+        <div class="fields">
+          <Skeleton class="skeleton" v-if="loading" height
+          ="30px" width="320px"></Skeleton>
+          <div class="p-field" v-else>
             <label for="email">メールアドレス</label>
-            <InputText id="email" type="email" v-model="email" />
+            <InputText id="email" type="email" v-model="email"/>
           </div>
-          <div class="p-field">
+          <Skeleton class="skeleton" v-if="loading" height
+          ="30px" width="320px"></Skeleton>
+          <div class="p-field" v-else>
             <label for="password">パスワード</label>
             <InputText id="password" type="password" v-model="password" />
           </div>
         </div>
-        <div class="p-field">
+        <Skeleton class="skeleton" v-if="loading" height
+          ="30px"></Skeleton>
+        <div class="p-field" v-else>
           <Button icon="pi pi-check" label="ログイン" v-on:click="login" />
         </div>
         <!-- 新規登録のリンクを追加 -->
@@ -119,5 +124,8 @@ export default {
 }
 #alart{
   color: red;
+}
+.skeleton{
+  margin: 10px auto 0px;
 }
 </style>

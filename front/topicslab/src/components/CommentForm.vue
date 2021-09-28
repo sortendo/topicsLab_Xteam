@@ -1,13 +1,14 @@
 <template>
   <div>
-    <Skeleton v-if="loading"></Skeleton>
-    <Card v-else>
+    <Card>
       <template #content>
-        <div class="p-field">
+        <Skeleton class="skeleton" v-if="loading" height="100px"></Skeleton>
+        <div class="p-field" v-else>
           <Textarea v-model="comment" :autoResize="true" rows="5" />
           <p>{{message}}</p>
         </div>
-        <div class="p-field">
+        <Skeleton class="skeleton" v-if="loading" height="35px"></Skeleton>
+        <div class="p-field" v-else>
           <Button icon="pi pi-check" label="コメントする" v-on:click="submit" />
         </div>
       </template>
@@ -81,5 +82,8 @@ export default {
 .p-field * {
   display: block;
   width: 100%;
+}
+.skeleton{
+  margin-top: 10px;
 }
 </style>

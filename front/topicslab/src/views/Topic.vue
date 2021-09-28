@@ -1,7 +1,6 @@
 <template>
   <div>
-    <Skeleton v-if="loading"></Skeleton>
-    <Card v-else>
+    <Card>
       <template #title>
         {{topic.title}}
       </template>
@@ -10,17 +9,20 @@
         <Dialog header="ERROR" v-model:visible="display" >
           <span>{{message}}</span>
         </Dialog>
-        <div class="body-text">
+        <Skeleton v-if="loading" height="50px"></Skeleton>
+        <div class="body-text" v-else>
           {{topic.body}}
         </div>
       </template>
       <template #footer>
-        <span>
+        <Skeleton class="skeleton-user" v-if="loading" height="20px" width="50px"></Skeleton>
+        <span v-else>
           <router-link v-if="this.topic.user" :to="`/user/${user.id}`">{{user.name}}</router-link>
           <span v-else>退会したユーザー</span>
         </span>
           <!-- いいねボタン追加 -->
-          <span class="like">
+          <Skeleton class="skeleton-user" v-if="loading" height="40px" width="50px"></Skeleton>
+          <span class="like" v-else>
            <Button label="♡" class="p-button-help p-button-sm"/>
           </span>
       </template>
@@ -124,5 +126,9 @@ export default {
 }
 .comment-form{
   margin-top: 50px;
+}
+.skeleton-user{
+  margin-left: auto;
+  margin-top: 10px;
 }
 </style>
