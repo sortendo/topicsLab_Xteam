@@ -10,7 +10,7 @@
         {{comment.body}}
       </div>
       <!-- いいねボタン -->
-      <Button label="♡" class="p-button-help p-button-sm"/>
+      <span class="like"><Button label="♡" class="p-button-help p-button-sm"/></span>
       <!-- end -->
     </Fieldset>
   </div>
@@ -37,5 +37,9 @@ export default {
 
 .comment-text {
   white-space:pre-wrap;
+}
+
+.like {
+  float: right;
 }
 </style>
