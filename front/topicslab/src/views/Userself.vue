@@ -3,7 +3,7 @@
     <Skeleton v-if="loading"></Skeleton>
     <Card v-else>
       <template #title>
-        mypage
+        マイページ
       </template>
       <template #content>
         <!-- ダイアログボックス -->
@@ -14,9 +14,9 @@
         <UserContents />
       </template>
       <template #footer>
-        <Button label="Create Topic" v-on:click="toNewTopic" />
-        <Button label="Logout" class="p-button-warning" v-on:click="logout" />
-        <Button label="Withdraw" class="p-button-danger" v-on:click="withdraw" />
+        <Button label="Topicを投稿する" v-on:click="toNewTopic" />
+        <Button label="ログアウト" class="p-button-warning" v-on:click="logout" />
+        <Button label="アカウント削除" class="p-button-danger" v-on:click="withdraw" />
       </template>
     </Card>
   </div>
