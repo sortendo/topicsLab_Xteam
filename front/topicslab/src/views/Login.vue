@@ -79,11 +79,16 @@ export default {
               }
             })
             .catch((err) => {
-              console.log(err)
+
+              if (err.response.status === 403) {
+                this.message = '退会済みのユーザーです。'
+              } else {
+                console.log(err)
+                this.message = 'ログインに失敗しました。'
+              }
               this.loading = false
-              this.message = 'ログインに失敗しました。メールアドレスとパスワードを確認してください。'
-              // 指示書21 ダイアログを表示
               this.display = true
+
             })
         })
         .catch((err) => {

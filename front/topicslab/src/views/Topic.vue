@@ -16,7 +16,8 @@
       </template>
       <template #footer>
         <span>
-          <router-link :to="`/user/${user.id}`">{{user.name}}</router-link>
+          <router-link v-if="this.topic.user" :to="`/user/${user.id}`">{{user.name}}</router-link>
+          <span v-else>退会したユーザー</span>
         </span>
           <!-- いいねボタン追加 -->
           <span class="like">
