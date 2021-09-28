@@ -1,7 +1,7 @@
 <template>
   <div>
     <Skeleton v-if="loading"></Skeleton>
-    <Card v-for="topic in topics" :key="topic.id" v-else>
+    <Card v-for="topic in topics" :key="topic.id">
     <!-- ダイアログボックス -->
     <Dialog header="ERROR" v-model:visible="display" >
       <span>{{message}}</span>

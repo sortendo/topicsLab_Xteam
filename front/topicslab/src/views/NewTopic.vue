@@ -5,21 +5,22 @@
         <span class="error">{{messages.body}}</span>
         <span class="error">{{messages.submit}}</span>
       </Dialog>
-     <Skeleton v-if="loading"></Skeleton>
-     <Card v-else>
+     <Card>
      <template #title>
       新しいTopicを投稿しよう
      </template>
      <template #content>
         <div class="p-field">
           <label for="title">Topicタイトル</label>
-          <InputText v-model="title" id="title" type="text" aria-describedby="title-help" />
+          <Skeleton v-if="loading" height="30px"></Skeleton>
+          <InputText  v-model="title" id="title" type="text" aria-describedby="title-help" v-else/>
           <small id="title-help">タイトルを入力してください。</small>
           <span class="error">{{messages.title}}</span>
         </div>
         <div class="p-field">
           <label for="title">Topic内容</label>
-          <Textarea v-model="body" :autoResize="true" rows="10" />
+          <Skeleton v-if="loading" height="200px"></Skeleton>
+          <Textarea v-model="body" :autoResize="true" rows="10" v-else/>
           <span class="error">{{messages.body}}</span>
         </div>
         <div class="p-field">

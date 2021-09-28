@@ -1,7 +1,6 @@
 <template>
   <div>
-    <Skeleton v-if="loading"></Skeleton>
-    <Card v-else>
+    <Card>
       <template #title>
         マイページ
       </template>
@@ -11,12 +10,16 @@
           <span>{{message}}</span>
         </Dialog>
         {{user.name}}
-        <UserContents />
+        <Skeleton v-if="loading" height="100px"></Skeleton>
+        <UserContents v-else/>
       </template>
       <template #footer>
-        <Button label="Topicを投稿する" v-on:click="toNewTopic" />
-        <Button label="ログアウト" class="p-button-warning" v-on:click="logout" />
-        <Button label="アカウント削除" class="p-button-danger" v-on:click="withdraw" />
+        <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
+        <Button label="Topicを投稿する" v-on:click="toNewTopic" v-else/>
+        <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
+        <Button label="ログアウト" class="p-button-warning" v-on:click="logout" v-else/>
+        <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
+        <Button label="アカウント削除" class="p-button-danger" v-on:click="withdraw" v-else/>
       </template>
     </Card>
   </div>
@@ -140,5 +143,9 @@ export default {
   .p-button {
     margin-right: 10px;
   }
+}
+.skeleton-btn{
+  display: inline-block;
+  margin-right: 15px;
 }
 </style>

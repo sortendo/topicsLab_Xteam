@@ -1,14 +1,14 @@
 <template>
   <div>
-    <Skeleton v-if="loading"></Skeleton>
-    <Card v-else>
+    <Card>
       <template #content>
         <!-- ダイアログボックス -->
         <Dialog header="ERROR" v-model:visible="display" >
           <span>{{message}}</span>
         </Dialog>
         {{user.name}}
-        <UserContents />
+        <Skeleton v-if="loading" height="80px"></Skeleton>
+        <UserContents v-else/>
       </template>
     </Card>
   </div>
