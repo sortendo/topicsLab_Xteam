@@ -6,7 +6,6 @@
     <Dialog header="ERROR" v-model:visible="display" >
       <span>{{message}}</span>
     </Dialog>
-    <Card v-for="topic in topics" :key="topic.id">
         <template #content>
           <span class="topic-date">投稿日：{{moment(topic.created_at)}}</span>
           <h2>
