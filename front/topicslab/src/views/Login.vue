@@ -69,6 +69,7 @@ export default {
                 console.log('ログイン成功')
                 localStorage.setItem('authenticated', 'true')
                 this.loading = false
+                this.$router.push('/')
               } else {
                 this.loading = false
                 this.message = 'ログインに失敗しました。'
