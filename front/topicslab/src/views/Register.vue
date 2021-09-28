@@ -2,7 +2,7 @@
   <div>
     <Card>
       <template #title>
-        Register
+        新規登録
       </template>
       <template #content>
         <div class="fields">
@@ -28,7 +28,7 @@
         </div>
         <Skeleton class="skeleton" v-if="loading" width="530px" height="35px"></Skeleton>
         <div class="p-field" v-else>
-          <Button icon="pi pi-check" label="Register" v-on:click="register" />
+          <Button icon="pi pi-check" label="登録する" v-on:click="register" />
         </div>
       </template>
     </Card>

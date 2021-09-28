@@ -2,6 +2,10 @@
   <div>
     <Card>
       <template #content>
+        <!-- ダイアログボックス -->
+        <Dialog header="ERROR" v-model:visible="display" >
+          <span>{{message}}</span>
+        </Dialog>
         <Skeleton class="skeleton" v-if="loading" height="100px"></Skeleton>
         <div class="p-field" v-else>
           <Textarea v-model="comment" :autoResize="true" rows="5" />
@@ -19,11 +23,13 @@
 <script>
 import axios from '@/supports/axios'
 import Skeleton from 'primevue/skeleton'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'CommentForm',
   components: {
-    Skeleton
+    Skeleton,
+    Dialog
   },
   props: {
     topicId: Number
@@ -32,7 +38,8 @@ export default {
     return {
       comment: '',
       message: '',
-      loading: false
+      loading: false,
+      display: false
     }
   },
   methods: {
@@ -40,6 +47,7 @@ export default {
       const comment = this.comment.trim()
       if (!comment) {
         this.message = '未記入(空白のみ)は送信できません。'
+        this.display = true
         return
       }
 
@@ -58,17 +66,21 @@ export default {
               } else {
                 this.message = '送信に失敗しました。'
                 this.loading = false
+                this.display = true
               }
             })
             .catch((err) => {
               console.log(err)
               this.message = '送信に失敗しました。'
               this.loading = false
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
+          console.log(err)
+          this.message = '通信に失敗しました。'
           this.loading = false
+          this.display = true
         })
     }
   }

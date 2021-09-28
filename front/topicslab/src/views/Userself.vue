@@ -2,7 +2,7 @@
   <div>
     <Card>
       <template #title>
-        mypage
+        マイページ
       </template>
       <template #content>
         <!-- ダイアログボックス -->
@@ -15,11 +15,11 @@
       </template>
       <template #footer>
         <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
-        <Button label="Create Topic" v-on:click="toNewTopic" v-else/>
+        <Button label="Topicを投稿する" v-on:click="toNewTopic" v-else/>
         <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
-        <Button label="Logout" class="p-button-warning" v-on:click="logout" v-else/>
+        <Button label="ログアウト" class="p-button-warning" v-on:click="logout" v-else/>
         <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
-        <Button label="Withdraw" class="p-button-danger" v-on:click="withdraw" v-else/>
+        <Button label="アカウント削除" class="p-button-danger" v-on:click="withdraw" v-else/>
       </template>
     </Card>
   </div>
