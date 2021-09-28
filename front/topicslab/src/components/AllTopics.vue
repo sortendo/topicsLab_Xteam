@@ -2,6 +2,11 @@
   <div>
     <Skeleton v-if="loading"></Skeleton>
     <Card v-for="topic in topics" :key="topic.id" v-else>
+    <!-- ダイアログボックス -->
+    <Dialog header="ERROR" v-model:visible="display" >
+      <span>{{message}}</span>
+    </Dialog>
+    <Card v-for="topic in topics" :key="topic.id">
         <template #content>
           <span class="topic-date">投稿日：{{moment(topic.created_at)}}</span>
           <h2>
@@ -18,16 +23,20 @@
 import axios from '@/supports/axios'
 import moment from 'moment'
 import Skeleton from 'primevue/skeleton'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'AllTopics',
   components: {
-    Skeleton
+    Skeleton,
+    Dialog
   },
   data () {
     return {
       topics: [],
-      loading: false
+      loading: false,
+      message: '',
+      display: false
     }
   },
   mounted () {
@@ -50,12 +59,22 @@ export default {
               } else {
                 console.log('取得失敗')
                 this.loading = false
+                this.message = 'Topic取得失敗'
+                this.display = true
               }
+            })
+            .catch((err) => {
+              console.log(err)
+              this.message = 'Topic取得失敗'
+              // 指示書21 ダイアログを表示
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
           this.loading = false
+          this.message = 'Topic取得失敗'
+          this.display = true
+          console.log(err)
         })
     }
   }

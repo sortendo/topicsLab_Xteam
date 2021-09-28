@@ -6,6 +6,10 @@
         mypage
       </template>
       <template #content>
+        <!-- ダイアログボックス -->
+        <Dialog header="ERROR" v-model:visible="display" >
+          <span>{{message}}</span>
+        </Dialog>
         {{user.name}}
         <UserContents />
       </template>
@@ -22,17 +26,21 @@
 import UserContents from '@/components/UserContents'
 import axios from '@/supports/axios'
 import Skeleton from 'primevue/skeleton'
+import Dialog from 'primevue/dialog'
 
 export default {
   name: 'Userself',
   components: {
     UserContents,
-    Skeleton
+    Skeleton,
+    Dialog
   },
   data () {
     return {
       user: {},
-      loading: false
+      loading: false,
+      message: '',
+      display: false
     }
   },
   mounted () {
@@ -61,11 +69,15 @@ export default {
             .catch(err => {
               console.log(err)
               this.loading = false
+              this.message = 'ログアウトに失敗しました'
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
           this.loading = false
+          console.log(err)
+          this.message = 'ログアウトに失敗しました'
+          this.display = true
         })
     },
     withdraw () {
@@ -83,11 +95,15 @@ export default {
             .catch(err => {
               console.log(err)
               this.loading = false
+              this.message = 'アカウント削除に失敗しました'
+              this.display = true
             })
         })
         .catch((err) => {
-          alert(err)
           this.loading = false
+          console.log(err)
+          this.message = 'アカウント削除に失敗しました'
+          this.display = true
         })
     },
     getUser () {
@@ -101,13 +117,18 @@ export default {
                 this.loading = false
               } else {
                 console.log('取得失敗')
+                this.message = '取得失敗'
+                this.display = true
+
                 this.loading = false
               }
             })
         })
         .catch((err) => {
-          alert(err)
           this.loading = false
+          console.log(err)
+          this.message = '取得失敗'
+          this.display = true
         })
     }
   }

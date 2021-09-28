@@ -5,8 +5,14 @@
         ログイン
       </template>
       <template #content>
+           
+         <!-- 指示書21 ダイアログボックス -->
+        <Dialog header="ERROR" v-model:visible="display" >
+          <span id="alart">{{message}}</span>
+        </Dialog>
+        
         <Skeleton v-if="loading"></Skeleton>
-        <div class="fields" v-else>
+        <div class="fields" v-else>   
           <div class="p-field">
             <label for="email">メールアドレス</label>
             <InputText id="email" type="email" v-model="email" />
@@ -16,7 +22,6 @@
             <InputText id="password" type="password" v-model="password" />
           </div>
         </div>
-        <span id="alart">{{message}}</span>
         <div class="p-field">
           <Button icon="pi pi-check" label="ログイン" v-on:click="login" />
         </div>
@@ -33,9 +38,12 @@
 <script>
 import axios from '@/supports/axios'
 import Skeleton from 'primevue/skeleton'
+import Dialog from 'primevue/dialog'
+
 export default {
   name: 'Login',
   components: {
+    Dialog,
     Skeleton
   },
   data () {
@@ -44,7 +52,9 @@ export default {
       password: '',
       error: false,
       message: '',
-      loading: false
+      loading: false,
+      // 指示書21 ダイアログを基本は非表示にする
+      display: false
     }
   },
   methods: {
@@ -62,19 +72,30 @@ export default {
                 localStorage.setItem('authenticated', 'true')
                 this.loading = false
               } else {
-                this.message = 'ログインに失敗しました。'
                 this.loading = false
+                this.message = 'ログインに失敗しました。'
+                // 指示書21 ダイアログを表示
+                this.display = true
               }
             })
             .catch((err) => {
-              console.log(err)
-              this.message = 'ログインに失敗しました。'
+
+              if (err.response.status === 403) {
+                this.message = '退会済みのユーザーです。'
+              } else {
+                console.log(err)
+                this.message = 'ログインに失敗しました。'
+              }
               this.loading = false
+              this.display = true
+
             })
         })
         .catch((err) => {
-          alert(err)
           this.loading = false
+          console.log(err)
+          this.message = '取得失敗'
+          this.display = true
         })
     }
   }
