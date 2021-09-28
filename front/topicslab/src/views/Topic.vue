@@ -95,12 +95,13 @@ export default {
             .catch((err) => {
               console.log(err)
               this.loading = false
-                // 指示書21 ダイアログを表示
+              // 指示書21 ダイアログを表示
               this.message = '取得失敗しました'
               this.display = true
             })
         })
         .catch((err) => {
+          console.log(err)
           this.loading = false
           this.message = '取得失敗'
           this.display = true

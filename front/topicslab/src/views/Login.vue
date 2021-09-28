@@ -5,14 +5,12 @@
         ログイン
       </template>
       <template #content>
-           
          <!-- 指示書21 ダイアログボックス -->
         <Dialog header="ERROR" v-model:visible="display" >
           <span id="alart">{{message}}</span>
         </Dialog>
-        
         <Skeleton v-if="loading"></Skeleton>
-        <div class="fields" v-else>   
+        <div class="fields" v-else>
           <div class="p-field">
             <label for="email">メールアドレス</label>
             <InputText id="email" type="email" v-model="email" />
@@ -79,7 +77,6 @@ export default {
               }
             })
             .catch((err) => {
-
               if (err.response.status === 403) {
                 this.message = '退会済みのユーザーです。'
               } else {
@@ -88,7 +85,6 @@ export default {
               }
               this.loading = false
               this.display = true
-
             })
         })
         .catch((err) => {
