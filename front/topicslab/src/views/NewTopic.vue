@@ -85,7 +85,7 @@ export default {
           })
             .then((res) => {
               if (res.status === 201) {
-              //
+                this.$router.push('/')
                 this.loadng = false
               } else {
                 this.loadng = false
