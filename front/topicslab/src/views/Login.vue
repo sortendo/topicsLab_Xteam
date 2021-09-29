@@ -29,8 +29,10 @@
           <Button icon="pi pi-check" label="ログイン" v-on:click="login" />
         </div>
         <!-- 新規登録のリンクを追加 -->
-        <div class="p-field">
-          <router-link to="/register">新規登録</router-link>
+        <Skeleton class="skeleton" v-if="loading" height
+          ="30px"></Skeleton>
+        <div class="p-field" v-else>
+          <Button icon="pi pi-check" label="新規登録" to="/register" v-on:click="register" />
         </div>
         <!-- end -->
       </template>
@@ -99,6 +101,9 @@ export default {
           this.message = '取得失敗'
           this.display = true
         })
+    },
+    register () {
+      this.$router.push('/register')
     }
   }
 }

@@ -10,7 +10,7 @@
         {{comment.body}}
       </div>
       <!-- いいねボタン -->
-      <span class="like"><Button label="♡" class="p-button-help p-button-sm"/></span>
+      <span class="like"><Button label="いいね♡" class="p-button-help p-button-sm"/></span>
       <!-- end -->
     </Fieldset>
   </div>

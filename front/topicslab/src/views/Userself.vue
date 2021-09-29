@@ -15,7 +15,7 @@
       </template>
       <template #footer>
         <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
-        <Button label="Topicを投稿する" v-on:click="toNewTopic" v-else/>
+        <Button label="トピックを投稿する" v-on:click="toNewTopic" v-else/>
         <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
         <Button label="ログアウト" class="p-button-warning" v-on:click="logout" v-else/>
         <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
