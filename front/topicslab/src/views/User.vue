@@ -8,7 +8,7 @@
         </Dialog>
         {{user.name}}
         <Skeleton v-if="loading" height="80px"></Skeleton>
-        <UserContents v-else/>
+        <UserContents v-else :topics="this.topics" :id="this.id" />
       </template>
     </Card>
   </div>
@@ -33,7 +33,8 @@ export default {
       user: {},
       loading: false,
       message: '',
-      display: false
+      display: false,
+      topics: []
     }
   },
   mounted () {
@@ -47,16 +48,37 @@ export default {
       this.message = '不正なIDです。'
       this.display = true
     }
+
     this.getUser()
+
+    axios.get('/sanctum/csrf-cookie')
+      .then(() => {
+        axios.get('/api/topics')
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res.data)
+              res.data.forEach(responce => {
+                console.log(responce.user_id, this.id)
+                if (responce.user_id === Number(this.id)) {
+                  this.topics.push(responce)
+                  console.log(responce)
+                }
+              })
+            } else {
+              console.log('err')
+            }
+          })
+      })
   },
   methods: {
     getUser () {
       this.loading = true
+
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
           axios.get(`/api/user/${this.id}`)
             .then((res) => {
-              console.log(res)
+              // console.log(res)
               if (res.status === 200) {
                 this.user = res.data
                 this.loading = false
