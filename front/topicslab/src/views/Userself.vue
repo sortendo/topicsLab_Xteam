@@ -11,7 +11,7 @@
         </Dialog>
         {{user.name}}
         <Skeleton v-if="loading" height="100px"></Skeleton>
-        <UserContents v-else/>
+        <UserContents v-else :topics="this.topics" :id="this.id" />
       </template>
       <template #footer>
         <Skeleton class="skeleton-btn" v-if="loading" width="100px" height="40px"></Skeleton>
@@ -40,7 +40,9 @@ export default {
   },
   data () {
     return {
+      id: null,
       user: {},
+      topics: [],
       loading: false,
       message: '',
       display: false
@@ -53,6 +55,24 @@ export default {
     }
 
     this.getUser()
+    axios.get('/sanctum/csrf-cookie')
+      .then(() => {
+        axios.get('/api/topics')
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res.data)
+              res.data.forEach(responce => {
+                console.log(responce.user_id, this.user.id)
+                if (responce.user_id === Number(this.user.id)) {
+                  this.topics.push(responce)
+                  console.log(responce)
+                }
+              })
+            } else {
+              console.log('err')
+            }
+          })
+      })
   },
   methods: {
     toNewTopic () {
