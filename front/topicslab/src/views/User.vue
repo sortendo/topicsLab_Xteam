@@ -56,12 +56,9 @@ export default {
         axios.get('/api/topics')
           .then((res) => {
             if (res.status === 200) {
-              console.log(res.data)
               res.data.forEach(responce => {
-                console.log(responce.user_id, this.id)
                 if (responce.user_id === Number(this.id)) {
                   this.topics.push(responce)
-                  console.log(responce)
                 }
               })
             } else {
@@ -78,9 +75,8 @@ export default {
         .then(() => {
           axios.get(`/api/user/${this.id}`)
             .then((res) => {
-              // console.log(res)
               if (res.status === 200) {
-                this.user = res.data
+                this.user = res.data[0]
                 this.loading = false
               } else {
                 console.log('取得失敗')
