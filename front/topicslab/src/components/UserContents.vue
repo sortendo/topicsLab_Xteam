@@ -1,7 +1,7 @@
 <template>
   <TabView>
-    <TabPanel header="Header I">
-      Content I
+    <TabPanel header="プロフィール">
+      プロフィール
     </TabPanel>
     <TabPanel header="トピック">
 
@@ -16,8 +16,8 @@
         </template>
     </Card>
     </TabPanel>
-    <TabPanel header="Header III">
-      Content III
+    <TabPanel header="コメント">
+      コメント
     </TabPanel>
   </TabView>
 </template>

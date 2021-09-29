@@ -23,7 +23,7 @@
           <!-- いいねボタン追加 -->
           <Skeleton class="skeleton-user" v-if="loading" height="40px" width="50px"></Skeleton>
           <span class="like" v-else>
-           <Button label="♡" class="p-button-help p-button-sm"/>
+           <Button label="いいね♡" class="p-button-help p-button-sm"/>
           </span>
       </template>
     </Card>
